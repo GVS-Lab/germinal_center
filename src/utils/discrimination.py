@@ -6,16 +6,36 @@ import pandas as pd
 from scipy.stats import stats
 from sklearn.manifold import TSNE
 from sklearn.metrics import plot_roc_curve, auc, confusion_matrix
+
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from umap import UMAP
 import seaborn as sns
 from tqdm import tqdm
 
-
-
+def plot_conf_mtx(X, y, model, figsize=[6, 4], normalize_matrix = "no"):
+    
+    if normalize_matrix == "yes":
+        conf_mtx = confusion_matrix(y, model.predict(X), normalize ="true")
+    else: 
+        conf_mtx = confusion_matrix(y, model.predict(X))
+    
+    labels = np.array(y)
+    
+    conf_mtx = pd.DataFrame(conf_mtx, index=sorted(set(labels)), columns=sorted(set(labels)))
+    
+    fig, ax = plt.subplots(figsize=figsize)
+    ax = sns.heatmap(conf_mtx, annot=True, cmap="BuPu", ax=ax)
+    ax.set_xlabel("Predicted")
+    ax.set_ylabel("True")
+    plt.title("Confusion Matrix")
+    plt.show()
+    plt.close()  
+    
+    return fig
+    
 def compute_cv_scores(
-    X, y, model, metrics=["accuracy", "balanced_accuracy", "f1_macro"], cv=10
+    X, y, model, metrics=["accuracy", "balanced_accuracy", "f1_macro" ], cv=10
 ):
     result = {"avg": [], "std": [], "min": [], "max": []}
     for metric in metrics:
@@ -29,7 +49,6 @@ def compute_cv_scores(
     return result
 
 
-
 def plot_cv_conf_mtx(X, y, model, cv=10, figsize=[6, 4]):
     avg_conf_mtx = compute_avg_conf_mtx(model=model, n_folds=cv, features=X, labels=y)
     fig, ax = plt.subplots(figsize=figsize)
@@ -40,7 +59,7 @@ def plot_cv_conf_mtx(X, y, model, cv=10, figsize=[6, 4]):
     plt.show()
     plt.close()
 
-    
+    return fig    
 
 def compute_avg_conf_mtx(model, n_folds, features, labels):
     skf = StratifiedKFold(n_folds)
@@ -78,16 +97,19 @@ def plot_feature_importance(importance, names, model_type, n_features=20):
     fi_df = fi_df.head(n_features)
     
     # Define size of bar plot
-    plt.figure(figsize=(8, 6))
+    fig = plt.figure(figsize=(8, 6))
     
     # Plot Searborn bar chart
     sns.barplot(x=fi_df["feature_importance"], y=fi_df["feature_names"], color= 'dimgray')
     
     # Add chart labels
-    plt.title(model_type + "Feature importance")
+
+    plt.title(model_type + "Feature importance (top {} out of {} features)".format(n_features, len(feature_names)))
     plt.xlabel("Feature importance")
     plt.ylabel("Featues")
     plt.show()
+    
+    return fig
 
 
 def find_markers(data, labels):

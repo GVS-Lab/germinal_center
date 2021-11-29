@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 from sklearn import mixture
+import scipy.spatial as ss
 
 
 def get_postive_cells_batch(dataset, img_names):
@@ -41,3 +42,30 @@ def get_two_compoent_threshold(data):
     threshold = np.mean(gm.means_)
     
     return threshold
+
+
+def t_cell_neighbours(dataset, R=1):
+    
+    image_ids = dataset['image'].unique()
+    grouped = dataset.groupby(dataset.image)
+
+    tcell_neighbours = []
+    
+    for i in range(len(image_ids)):
+        data = grouped.get_group(image_ids[i])
+        
+        t_cells = data['nuc_id'][data['type'] == 't_cells']
+        cords=np.column_stack((data['centroid-0'],data['centroid-1']))
+        #obtain the distance matrix 
+        dist_matrix=ss.distance.squareform(ss.distance.pdist(cords, 'euclidean'))
+        dist_matrix = pd.DataFrame(dist_matrix)
+        dist_matrix.columns = data['nuc_id']
+
+        #Defining neighbourhood radius "R" and counting the number of nuclei in "R"
+        t_cell_neighbours = dist_matrix[dist_matrix.columns.intersection(t_cells)]
+        mask=((t_cell_neighbours<R) & (t_cell_neighbours >0)).astype(float)
+        status = np.nansum(mask, axis=1)
+
+        tcell_neighbours.extend(data['nuc_id'][status>=1])
+    
+    return tcell_neighbours

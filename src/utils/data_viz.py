@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.stats import stats
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
+from tifffile import imread
 from umap import UMAP
 import seaborn as sns
 from tqdm import tqdm
@@ -17,13 +20,16 @@ def plot_feature_space(
     figsize = [8, 6],
     title: str = "",
     alpha: float = 1,
+    random_state=1234,
+    s=10,
+    palette=None
 ):
     idx = data.index
     scaled = StandardScaler().fit_transform(data)
     if mode == "tsne":
-        embs = TSNE().fit_transform(scaled)
+        embs = TSNE(random_state==random_state).fit_transform(scaled)
     elif mode == "umap":
-        embs = UMAP().fit_transform(scaled)
+        embs = UMAP(random_state=random_state).fit_transform(scaled)
     else:
         raise NotImplementedError("Unknown reduction type {}".format(mode))
     embs = pd.DataFrame(
@@ -41,6 +47,8 @@ def plot_feature_space(
         y="{}_1".format(mode),
         hue=label_col,
         alpha=alpha,
+        s=s,
+        palette=palette,
     )
     plt.title(title)
     plt.show()
@@ -49,7 +57,7 @@ def plot_feature_space(
     return embs
 
 
-def vis_classes(predictions,  nuclear_data, path_to_raw_imagesimage_id):
+def vis_classes(predictions,  nuclear_data, path_to_raw_images, image_id):
     img_path = os.path.join(os.path.join(path_to_raw_images,"images"),str(image_id)+".tif")
     image = imread(img_path)
     colors = {'dark_b_cells':'red', 'light_b_cells':'green', 't_cells':'blue', 'none': 'yellow'}

@@ -13,22 +13,22 @@ from tqdm import tqdm
 
 
 def clean_data(data, drop_columns=[], index_col=None):
-    
+
     filtered_data = data.copy()
-    
+
     if index_col is not None:
         filtered_data.index = data.loc[:, index_col]
-    
+
     filtered_data = filtered_data.select_dtypes(include=np.number)
     data = filtered_data.loc[:, (filtered_data != filtered_data.iloc[0]).any()]
     data = data.dropna(axis=1)
-    
+
     print(
         "Removed {} constant or features with missing values. Remaining: {}.".format(
             len(filtered_data.columns) - len(data.columns), len(data.columns)
         )
     )
-    
+
     cleaned_data = data.drop(
         columns=list(set(drop_columns).intersection(set(data.columns)))
     )
@@ -48,7 +48,7 @@ def clean_data(data, drop_columns=[], index_col=None):
 
 
 def remove_correlated_features(data, threshold):
-    
+
     data_corr = data.corr().abs()
     upper = data_corr.where(np.triu(np.ones(data_corr.shape), k=1).astype(bool))
 

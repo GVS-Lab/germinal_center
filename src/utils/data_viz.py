@@ -96,8 +96,8 @@ def vis_classes(predictions, nuclear_data, path_to_raw_images, image_id):
     }
     grouped = nuclear_data.groupby(nuclear_data.image)
     data = grouped.get_group(image_id)
-    x = nuclear_data.loc[data.index, "centroid_y"]
-    y = nuclear_data.loc[data.index, "centroid_x"]
+    x = nuclear_data.loc[data.index, "centroid_x"]
+    y = nuclear_data.loc[data.index, "centroid_y"]
     pred_labels = predictions.loc[data.index, "predicted_class"]
     act_labels = predictions.loc[data.index, "actual_stage"]
     fig = plt.figure(figsize=(10, 4))
@@ -105,9 +105,9 @@ def vis_classes(predictions, nuclear_data, path_to_raw_images, image_id):
     ax1 = fig.add_subplot(132)
     ax2 = fig.add_subplot(133)
     ax0.imshow(image, aspect="auto", origin="lower")
-    ax1.scatter(y, x, c=(pred_labels.map(colors)), s=1)
+    ax1.scatter(x, y, c=(pred_labels.map(colors)), s=1)
     ax1.set_title("Predicted Classes")
-    ax2.scatter(y, x, c=(act_labels.map(colors)), s=1)
+    ax2.scatter(x, y, c=(act_labels.map(colors)), s=1)
     ax2.set_title("Actual Classes")
 
 
@@ -131,8 +131,8 @@ def plot_tcell_labels(
     if block_channel is not None:
         image[:, :, block_channel] = 0
     data = data.loc[data.image == image_id]
-    x = np.array(spatial_cord.loc[data.index, "centroid_y"])
-    y = np.array(spatial_cord.loc[data.index, "centroid_x"])
+    x = np.array(spatial_cord.loc[data.index, "centroid-1"])
+    y = np.array(spatial_cord.loc[data.index, "centroid-0"])
     labels = np.array(data.loc[:, label_col])
     vis_df = pd.DataFrame(x, columns=["x"], index=data.index)
     vis_df["y"] = y
@@ -181,7 +181,10 @@ def plot_predictions(
     n_folds=5,
     train_on_balanced_subsample=True,
     random_state=1234,
+    s=5,
 ):
+    figs = []
+    axs = []
     img_path = os.path.join(image_dir, str(image_id) + ".tif")
     image = imread(img_path)
     data = data.loc[data.image == image_id]
@@ -196,8 +199,8 @@ def plot_predictions(
         train_on_balanced_subsample=train_on_balanced_subsample,
         random_state=random_state,
     )
-    y = np.array(spatial_cord.loc[data.index, "centroid_y"])
-    x = np.array(spatial_cord.loc[data.index, "centroid_x"])
+    x = np.array(spatial_cord.loc[data.index, "centroid-1"])
+    y = np.array(spatial_cord.loc[data.index, "centroid-0"])
     preds = np.array(data.loc[:, "predicted"])
     pred_probs = np.array(data.loc[:, "predicted_{}_prob".format(pos_label)])
     labels = np.array(data.loc[:, label_col])
@@ -210,8 +213,9 @@ def plot_predictions(
 
     fig, ax = plt.subplots(figsize=figsize)
     ax.imshow(image, aspect="auto", origin="lower")
-    plt.show()
-    plt.close()
+    figs.append(fig)
+    axs.append(ax)
+
     fig, ax = plt.subplots(figsize=figsize)
     ax = sns.scatterplot(
         data=pred_label_df,
@@ -220,35 +224,37 @@ def plot_predictions(
         hue="label",
         ax=ax,
         hue_order=np.unique(labels),
-        s=3,
+        s=s,
     )
     ax.set_xlim([0, image.shape[1]])
     ax.set_ylim([0, image.shape[0]])
-    plt.show()
-    plt.close()
+    figs.append(fig)
+    axs.append(ax)
+
     fig, ax = plt.subplots(figsize=figsize)
     ax = sns.scatterplot(
         data=pred_label_df,
-        x="y",
-        y="x",
+        x="x",
+        y="y",
         hue="predicted",
         ax=ax,
         hue_order=np.unique(labels),
-        s=3,
+        s=s,
     )
     ax.set_xlim([0, image.shape[1]])
     ax.set_ylim([0, image.shape[0]])
-    plt.show()
-    plt.close()
-    fig, ax = plt.subplots(figsize=[figsize[0] + 1, figsize[1]])
+    figs.append(fig)
+    axs.append(ax)
+
+    fig, ax = plt.subplots(figsize=[figsize[0] + 1.5, figsize[1]])
     ax = sns.scatterplot(
         data=pred_label_df,
         x="x",
         y="y",
         hue="predicted {} probability".format(pos_label),
-        palette="RdBu",
+        palette="viridis",
         ax=ax,
-        s=3,
+        s=s,
     )
     ax.set_xlim([0, image.shape[1]])
     ax.set_ylim([0, image.shape[0]])
@@ -257,9 +263,10 @@ def plot_predictions(
         pred_label_df["predicted {} probability".format(pos_label)].min(),
         pred_label_df["predicted {} probability".format(pos_label)].max(),
     )
-    sm = plt.cm.ScalarMappable(cmap="RdBu", norm=norm)
+    sm = plt.cm.ScalarMappable(cmap="viridis", norm=norm)
     sm.set_array([])
     ax.get_legend().remove()
-    ax.figure.colorbar(sm, label="predicted {} probability".format(pos_label))
-    plt.show()
-    plt.close()
+    ax.figure.colorbar(sm, label="{} prediction probability".format(pos_label))
+    figs.append(fig)
+    axs.append(ax)
+    return figs, axs

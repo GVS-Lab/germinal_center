@@ -59,8 +59,6 @@ def plot_cv_conf_mtx(avg_conf_mtx, n_folds, figsize=[6, 4]):
     ax.set_xlabel("Predicted")
     ax.set_ylabel("True")
     plt.title("Average confusion matrix from {}-fold stratified CV".format(n_folds))
-    plt.show()
-    plt.close()
 
     return fig, ax
 
@@ -90,7 +88,12 @@ def run_cv_evaluation(model, n_folds, features, labels, random_state=1234):
 
 
 def plot_feature_importance(
-    importance, names, model_type, n_features=20, figsize=[6, 4]
+    importance,
+    names,
+    model_type,
+    n_features=20,
+    figsize=[6, 4],
+    feature_color_dict=None,
 ):
     # Create arrays from feature importance and feature names
     feature_importance = np.array(importance)
@@ -108,9 +111,13 @@ def plot_feature_importance(
     fig = plt.figure(figsize=figsize)
 
     # Plot Searborn bar chart
-    sns.barplot(
+    ax = sns.barplot(
         x=fi_df["feature_importance"], y=fi_df["feature_names"], color="dimgray"
     )
+
+    if feature_color_dict is not None:
+        for yticklabel in ax.get_yticklabels():
+            yticklabel.set_color(feature_color_dict[yticklabel.get_text()])
 
     # Add chart labels
 
@@ -324,7 +331,7 @@ def get_distances_to_dz_lz_border(nuc_features, spatial_cord, alpha=0.02, n_jobs
     dz_spatial_data = spatial_data.loc[dz_nuc_data.index]
     lz_spatial_data = spatial_data.loc[lz_nuc_data.index]
 
-    result = spatial_data.loc[:, ["centroid_y", "centroid_x", "image"]]
+    result = spatial_data.loc[:, ["centroid-0", "centroid-1", "image"]]
     result.loc[:, "cell_type"] = nuc_data.loc[result.index, "cell_type"]
     nn = NearestNeighbors(n_neighbors=2, n_jobs=n_jobs)
     for image in np.unique(spatial_data.loc[:, "image"]):
@@ -337,14 +344,14 @@ def get_distances_to_dz_lz_border(nuc_features, spatial_cord, alpha=0.02, n_jobs
             dz_spatial_data.loc[:, "image"] == image
         ]
 
-        nn.fit(image_lz_spatial_data.loc[:, ["centroid_y", "centroid_x"]])
+        nn.fit(image_lz_spatial_data.loc[:, ["centroid-0", "centroid-1"]])
         dz_distances, _ = nn.kneighbors(
-            image_dz_spatial_data.loc[:, ["centroid_y", "centroid_x"]], n_neighbors=k
+            image_dz_spatial_data.loc[:, ["centroid-0", "centroid-1"]], n_neighbors=k
         )
 
-        nn.fit(image_dz_spatial_data.loc[:, ["centroid_y", "centroid_x"]])
+        nn.fit(image_dz_spatial_data.loc[:, ["centroid-0", "centroid-1"]])
         lz_distances, _ = nn.kneighbors(
-            image_lz_spatial_data.loc[:, ["centroid_y", "centroid_x"]], n_neighbors=k
+            image_lz_spatial_data.loc[:, ["centroid-0", "centroid-1"]], n_neighbors=k
         )
         result.loc[image_lz_spatial_data.index, "distance_to_border"] = np.mean(
             lz_distances, axis=1
@@ -364,9 +371,9 @@ def get_distances_to_dz_lz_border(nuc_features, spatial_cord, alpha=0.02, n_jobs
             np.max(image_distances) - np.min(image_distances)
         )
 
-        nn.fit(image_spatial_data.loc[:, ["centroid_y", "centroid_x"]])
+        nn.fit(image_spatial_data.loc[:, ["centroid-0", "centroid-1"]])
         knns = nn.kneighbors(
-            image_spatial_data.loc[:, ["centroid_y", "centroid_x"]],
+            image_spatial_data.loc[:, ["centroid-0", "centroid-1"]],
             n_neighbors=k + 1,
             return_distance=False,
         )

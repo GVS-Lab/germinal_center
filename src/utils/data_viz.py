@@ -125,6 +125,8 @@ def plot_tcell_labels(
     figsize=[12, 4],
     size=5,
     block_channel=None,
+    palette1=None,
+        palette2=None
 ):
     image_path = os.path.join(image_dir, str(image_id) + ".tif")
     image = imread(image_path)
@@ -150,7 +152,7 @@ def plot_tcell_labels(
         s=size,
         ax=ax[1],
         hue_order=np.unique(vis_df.loc[:, "T-cell"]),
-        palette="inferno",
+        palette=palette1,
     )
     ax[2] = sns.scatterplot(
         data=vis_df,
@@ -160,6 +162,7 @@ def plot_tcell_labels(
         s=size,
         ax=ax[2],
         hue_order=np.unique(labels),
+        palette=palette2
     )
     for i in range(3):
         ax[i].set_xlabel("")
@@ -182,6 +185,8 @@ def plot_predictions(
     train_on_balanced_subsample=True,
     random_state=1234,
     s=5,
+    palette1=None,
+        palette2=None
 ):
     figs = []
     axs = []
@@ -225,6 +230,7 @@ def plot_predictions(
         ax=ax,
         hue_order=np.unique(labels),
         s=s,
+        palette=palette1
     )
     ax.set_xlim([0, image.shape[1]])
     ax.set_ylim([0, image.shape[0]])
@@ -240,6 +246,7 @@ def plot_predictions(
         ax=ax,
         hue_order=np.unique(labels),
         s=s,
+        palette=palette1
     )
     ax.set_xlim([0, image.shape[1]])
     ax.set_ylim([0, image.shape[0]])
@@ -252,7 +259,7 @@ def plot_predictions(
         x="x",
         y="y",
         hue="predicted {} probability".format(pos_label),
-        palette="viridis",
+        palette=palette2,
         ax=ax,
         s=s,
     )
@@ -263,7 +270,7 @@ def plot_predictions(
         pred_label_df["predicted {} probability".format(pos_label)].min(),
         pred_label_df["predicted {} probability".format(pos_label)].max(),
     )
-    sm = plt.cm.ScalarMappable(cmap="viridis", norm=norm)
+    sm = plt.cm.ScalarMappable(cmap=palette2, norm=norm)
     sm.set_array([])
     ax.get_legend().remove()
     ax.figure.colorbar(sm, label="{} prediction probability".format(pos_label))

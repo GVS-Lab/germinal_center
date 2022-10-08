@@ -176,7 +176,7 @@ def find_markers(data, labels, test="welch"):
 
 
 def plot_roc_for_stratified_cv(
-    X, y, n_splits, classifier, title, pos_label=None, groups=None, random_state=1234
+    X, y, n_splits, classifier, title, pos_label=None, groups=None, random_state=1234, figsize=[8,8]
 ):
     if groups is None:
         cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)
@@ -186,7 +186,7 @@ def plot_roc_for_stratified_cv(
     aucs = []
     mean_fpr = np.linspace(0, 1, 100)
 
-    fig, ax = plt.subplots(figsize=(8, 8))
+    fig, ax = plt.subplots(figsize=figsize)
     if groups is None:
         for i, (train, test) in enumerate(cv.split(X, y)):
             classifier.fit(X[train], y[train])

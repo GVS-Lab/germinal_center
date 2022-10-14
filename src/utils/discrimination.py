@@ -53,9 +53,17 @@ def compute_cv_scores(
     return result
 
 
-def plot_cv_conf_mtx(avg_conf_mtx, n_folds, figsize=[6, 4]):
+def plot_cv_conf_mtx(avg_conf_mtx, n_folds, figsize=[6, 4], annot_kws=None):
     fig, ax = plt.subplots(figsize=figsize)
-    ax = sns.heatmap(avg_conf_mtx, annot=True, cmap="BuPu", ax=ax, vmin=0, vmax=1)
+    ax = sns.heatmap(
+        avg_conf_mtx,
+        annot=True,
+        cmap="BuPu",
+        ax=ax,
+        vmin=0,
+        vmax=1,
+        annot_kws=annot_kws,
+    )
     ax.set_xlabel("Predicted")
     ax.set_ylabel("True")
     plt.title("Average confusion matrix from {}-fold stratified CV".format(n_folds))
@@ -114,6 +122,7 @@ def plot_feature_importance(
     ax = sns.barplot(
         x=fi_df["feature_importance"], y=fi_df["feature_names"], color="dimgray"
     )
+    sns.despine()
 
     if feature_color_dict is not None:
         for yticklabel in ax.get_yticklabels():
@@ -176,7 +185,15 @@ def find_markers(data, labels, test="welch"):
 
 
 def plot_roc_for_stratified_cv(
-    X, y, n_splits, classifier, title, pos_label=None, groups=None, random_state=1234, figsize=[8,8]
+    X,
+    y,
+    n_splits,
+    classifier,
+    title,
+    pos_label=None,
+    groups=None,
+    random_state=1234,
+    figsize=[8, 8],
 ):
     if groups is None:
         cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)

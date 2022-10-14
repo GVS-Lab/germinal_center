@@ -126,7 +126,7 @@ def plot_tcell_labels(
     size=5,
     block_channel=None,
     palette1=None,
-        palette2=None
+    palette2=None,
 ):
     image_path = os.path.join(image_dir, str(image_id) + ".tif")
     image = imread(image_path)
@@ -162,7 +162,7 @@ def plot_tcell_labels(
         s=size,
         ax=ax[2],
         hue_order=np.unique(labels),
-        palette=palette2
+        palette=palette2,
     )
     for i in range(3):
         ax[i].set_xlabel("")
@@ -186,7 +186,7 @@ def plot_predictions(
     random_state=1234,
     s=5,
     palette1=None,
-        palette2=None
+    palette2=None,
 ):
     figs = []
     axs = []
@@ -230,7 +230,7 @@ def plot_predictions(
         ax=ax,
         hue_order=np.unique(labels),
         s=s,
-        palette=palette1
+        palette=palette1,
     )
     sns.despine()
     ax.set_xlim([0, image.shape[1]])
@@ -247,7 +247,7 @@ def plot_predictions(
         ax=ax,
         hue_order=np.unique(labels),
         s=s,
-        palette=palette1
+        palette=palette1,
     )
     sns.despine()
     ax.set_xlim([0, image.shape[1]])

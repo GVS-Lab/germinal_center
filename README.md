@@ -13,7 +13,7 @@ The repository contains the code used to run the analysis of the chromatin state
 
 # System requirements
 
-The code has been developed and executed on a Thinkpad P1 mobile work station running Ubuntu 18.04 LTS with a Intel(R) Core(TM) i7-9750 CPU with 2.60 GHz, 32GB RAM and a Nvidia P200 GPU. Note that the code can also be run for machines without a GPU or with less available RAM.
+The code has been developed and executed on a Thinkpad P1 mobile work station running Ubuntu 18.04 LTS with a Intel(R) Core(TM) i7-9750H CPU with 2.60 GHz, 32GB RAM and a Nvidia P200 GPU. Note that the code can also be run for machines without a GPU or with less available RAM.
 
 ## Installation
 
@@ -26,7 +26,7 @@ conda activate gc
 
 ## Data resouces (Optional)
 
-Intermediate results of the analysis can be obtained from [**TO BE ADDED**]() but can also be produced using the steps described below to reproduce the results of the paper. If you want to use and/or adapt the code to run another analysis, the data is not required neither.
+Intermediate results of the analysis can be obtained from [https://drive.google.com/drive/folders/1HszNjSRFI2x25mEDQo-a_rKpemwtJZ4C?usp=sharing](here) but can also be produced using the steps described below to reproduce the results of the paper. If you want to use and/or adapt the code to run another analysis, the data is not required neither.
 
 ---
 

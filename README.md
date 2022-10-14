@@ -4,7 +4,10 @@ The repository contains the code used to run the analysis of the chromatin state
 
 > [*TO BE ADDED*]()
 
-<div style="text-align:center"><img src="https://github.com/GVS-Lab/germinal_center/blob/bf3cfc13d338a21edf7db25b881ae6f60ea21a87/gc_overview.png" /></div>
+<p align="center" width="100%">
+  <b>Computational analysis pipeline</b> <br>
+    <img width="66%" src="https://github.com/GVS-Lab/germinal_center/blob/bf3cfc13d338a21edf7db25b881ae6f60ea21a87/gc_overview.png">
+</p>
 
 ----
 

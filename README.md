@@ -2,7 +2,7 @@
 
 The repository contains the code used to run the analysis of the chromatin states of the cell populations in germinal centers and selected regions of interest which is discussed in:
 
-> [*TO BE ADDED*]()
+> [**TO BE ADDED**]()
 
 <p align="center" width="100%">
   <b>Computational analysis pipeline</b> <br>
@@ -26,7 +26,7 @@ conda activate gc
 
 ## Data resouces (Optional)
 
-Intermediate results of the analysis can be obtained from [*TO BE ADDED*]() but can also be produced using the steps described below to reproduce the results of the paper. If you want to use and/or adapt the code to run another analysis, the data is not required neither.
+Intermediate results of the analysis can be obtained from [**TO BE ADDED**]() but can also be produced using the steps described below to reproduce the results of the paper. If you want to use and/or adapt the code to run another analysis, the data is not required neither.
 
 ---
 
@@ -50,6 +50,6 @@ Finally, the correlation analysis of the measured dark zone gene expression sign
 
 If you use any of the code or resources provided here please make sure to reference the required software libraries if needed and also cite our work:
 
-** TO BE ADDED**
+**TO BE ADDED**
 
 ----

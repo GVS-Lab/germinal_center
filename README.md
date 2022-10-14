@@ -33,10 +33,18 @@ The data preprocessing steps quantile-normalize the data, segment individual nuc
 
 ## 2. Analysis of the B-cell populations in germinal centers
 
+To run the analysis regarding the different B-cell populations in the light respectively dark zone of the germinal centers, please use the code provided in the notebook ```notebooks/dataset1/light_vs_darkzone_bcells_and_tcell_integration.ipynb```.
+
 ## 3. Analysis of the gene expression and chromatin signature of cells
+
+Finally, the correlation analysis of the measured dark zone gene expression signatures of the selected RoIs and the chromatin states corresponding to those can be run using the code in ```notebooks/dataset3/chrometric_correlation_analysis.ipynb```.
 
 ---
 
 # How to cite
+
+If you use any of the code or resources provided here please make sure to reference the required software libraries if needed and also cite our work:
+
+** TO BE ADDED**
 
 ----

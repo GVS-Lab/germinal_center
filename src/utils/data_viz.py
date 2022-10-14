@@ -232,6 +232,7 @@ def plot_predictions(
         s=s,
         palette=palette1
     )
+    sns.despine()
     ax.set_xlim([0, image.shape[1]])
     ax.set_ylim([0, image.shape[0]])
     figs.append(fig)
@@ -248,6 +249,7 @@ def plot_predictions(
         s=s,
         palette=palette1
     )
+    sns.despine()
     ax.set_xlim([0, image.shape[1]])
     ax.set_ylim([0, image.shape[0]])
     figs.append(fig)
@@ -263,6 +265,7 @@ def plot_predictions(
         ax=ax,
         s=s,
     )
+    sns.despine()
     ax.set_xlim([0, image.shape[1]])
     ax.set_ylim([0, image.shape[0]])
 

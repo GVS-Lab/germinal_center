@@ -1,19 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-from scipy.stats import stats
-from sklearn.manifold import TSNE
-from sklearn.metrics import plot_roc_curve, auc, confusion_matrix
-from sklearn.model_selection import StratifiedKFold, cross_val_score
-from sklearn.preprocessing import StandardScaler
-import seaborn as sns
-from tqdm import tqdm
 
 
 def clean_data(data, drop_columns=[], index_col=None):
-
     filtered_data = data.copy()
 
     if index_col is not None:
@@ -48,7 +38,6 @@ def clean_data(data, drop_columns=[], index_col=None):
 
 
 def remove_correlated_features(data, threshold):
-
     data_corr = data.corr().abs()
     upper = data_corr.where(np.triu(np.ones(data_corr.shape), k=1).astype(bool))
 

@@ -10,7 +10,6 @@ def get_file_list(
     file_ending: bool = True,
     file_type_filter: str = None,
 ) -> List:
-
     assert os.path.exists(root_dir)
     list_of_data_locs = []
     for (root_dir, dirname, filename) in os.walk(root_dir):

@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 from matplotlib.image import imsave
 from skimage.color import label2rgb
 from skimage.segmentation import mark_boundaries
@@ -11,7 +12,6 @@ from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
 from tifffile import imread
 from umap import UMAP
-import seaborn as sns
 
 from src.utils.base import get_file_list
 from src.utils.discrimination import add_kfold_predictions

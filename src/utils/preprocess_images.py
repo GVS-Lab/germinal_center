@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 import os.path
-
-import pandas as pd
-import numpy as np
-from glob import glob
-import imageio as imio
-from tifffile import imsave
 from pathlib import Path
+
+import imageio as imio
+import numpy as np
+from tifffile import imsave
 
 from src.utils.base import get_file_list
 
 
 def extract_channel_save_image(image_dir: str, output_dir: str, channel: int):
-
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     # read in the images,segment and save labels

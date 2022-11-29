@@ -3,14 +3,15 @@
 Contains function to segment object from images given a stardist model. 
 
 """
-import imageio as imio
+import gc
 from glob import glob
 from pathlib import Path
+
+import imageio as imio
 from csbdeep.utils import normalize
-from stardist.models import StarDist2D
 from stardist import export_imagej_rois
+from stardist.models import StarDist2D
 from tifffile import imsave
-import gc
 
 
 def segment_objects_stardist2d(
@@ -23,7 +24,6 @@ def segment_objects_stardist2d(
     prob_thresh=0.6,
     normalize_quants=[1, 99.8],
 ):
-
     Path(output_dir_labels).mkdir(parents=True, exist_ok=True)
     Path(output_dir_ijroi).mkdir(parents=True, exist_ok=True)
 

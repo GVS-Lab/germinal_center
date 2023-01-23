@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 import scipy.spatial as ss
+from scipy.spatial.distance import squareform, pdist
 from sklearn import mixture
 from sklearn.neighbors import NearestNeighbors
 
@@ -40,7 +41,7 @@ def get_two_component_threshold(data):
 
 
 def tcell_k_neighbors(
-    dataset, k=5, tcell_label="t_cells", cell_type_col="type", id_col="nuc_id"
+        dataset, k=5, tcell_label="t_cells", cell_type_col="type", id_col="nuc_id"
 ):
     image_ids = dataset["image"].unique()
     grouped = dataset.groupby(dataset.image)
@@ -61,6 +62,24 @@ def tcell_k_neighbors(
             if tcell_label in cell_type_labels[knbrs[i]]:
                 tcell_kneighbors.append(ids[i])
     return tcell_kneighbors
+
+
+def get_distances_to_tcells(dataset, tcell_label="t_cells", cell_type_col="type", id_col="nuc_id", range_norm=True):
+    image_ids = dataset["image"].unique()
+    grouped = dataset.groupby(dataset.image)
+    tcell_dists = []
+    for i in range(len(image_ids)):
+        data = grouped.get_group(image_ids[i])
+        cell_type_labels = np.array(data.loc[:, cell_type_col])
+        ids = np.array(data.loc[:, id_col])
+        cell_dist_df = pd.DataFrame(
+            squareform(pdist(data.loc[:, ["centroid_y", "centroid_x"]])), index=ids, columns=ids
+        )
+        if range_norm:
+            cell_dist_df = (cell_dist_df - np.min(cell_dist_df))/(np.max(cell_dist_df) - np.min(cell_dist_df))
+
+        tcell_dists.append(cell_dist_df.loc[:, cell_type_labels == tcell_label])
+    return image_ids, tcell_dists
 
 
 def t_cell_neighbours(dataset, R=1, tcell_label="t_cells", cell_type_col="type"):

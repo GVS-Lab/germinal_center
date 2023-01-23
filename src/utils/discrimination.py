@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from imblearn.under_sampling import RandomUnderSampler
+from netneurotools.stats import permtest_pearsonr
 from scipy.stats import stats, ranksums
 from sklearn.metrics import plot_roc_curve, auc, confusion_matrix
 from sklearn.model_selection import StratifiedKFold, cross_val_score, GroupKFold
@@ -406,3 +407,29 @@ def get_distances_to_dz_lz_border(nuc_features, spatial_cord, alpha=0.02, n_jobs
                 2 * result.loc[idx, "frequency_of_dz_neighbors"] - 1
             )
     return result.dropna()
+
+
+def test_correlation(
+    bcell_features,
+    x_col="min_intensity",
+    y_col="tcell_mean_distance",
+    cell_type=None,
+    b=1e5,
+    seed=1234,
+    verbose=True,
+):
+    if cell_type is not None:
+        bcell_features = bcell_features.loc[bcell_features.cell_type == cell_type]
+
+    corr_perm_test_results = permtest_pearsonr(
+        np.array(bcell_features.loc[:, x_col]),
+        np.array(bcell_features.loc[:, y_col]),
+        n_perm=int(b),
+        seed=seed,
+    )
+    if verbose:
+        print(
+            "Pearson r for {} and {} (r, p-value)".format(x_col, y_col),
+            corr_perm_test_results,
+        )
+    return corr_perm_test_results

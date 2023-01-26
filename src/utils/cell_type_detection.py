@@ -73,7 +73,7 @@ def get_distances_to_tcells(dataset, tcell_label="t_cells", cell_type_col="type"
         cell_type_labels = np.array(data.loc[:, cell_type_col])
         ids = np.array(data.loc[:, id_col])
         cell_dist_df = pd.DataFrame(
-            squareform(pdist(data.loc[:, ["centroid_y", "centroid_x"]])), index=ids, columns=ids
+            squareform(pdist(data.loc[:, ["spat_centroid_y", "spat_centroid_x"]])), index=ids, columns=ids
         )
         if range_norm:
             cell_dist_df = (cell_dist_df - np.min(cell_dist_df))/(np.max(cell_dist_df) - np.min(cell_dist_df))
